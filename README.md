@@ -22,7 +22,7 @@ void main(int argc, char *argv) {
 
   sm_rem(sm, "x3xx12");
   //char *y = (char *)sm_get(sm, "x3xx12");
-  //printf("%s\n", y); // Segmentation fault (to resolve)
+  //printf("%s\n", y); // "" <- Empty string
 
   char *z = (char *)sm_get(sm, "3x12xx");
   printf("%s\n", z); // HELLO
