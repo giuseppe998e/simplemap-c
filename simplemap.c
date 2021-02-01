@@ -59,8 +59,9 @@ void __sm_entryfree(struct __sm_entry *entry) {
  */
 void sm_free(simplemap *map) {
   for (int i = 0; i < map->capacity; i++) {
-    if (map->buckets[i] == NULL) continue;
-    __sm_entryfree(map->buckets[i]);
+    if (map->buckets[i] != NULL) {
+      __sm_entryfree(map->buckets[i]);
+    }
   }
 
   free(map->buckets);
@@ -120,9 +121,10 @@ void __sm_expandmap(simplemap *map) {
   map->buckets = (struct __sm_entry **)realloc(map->buckets, map->capacity * sizeof(struct __sm_entry *));
 
   for (int i = 0; i < old_capacity; i++) {
-    if (map->buckets[i] == NULL) continue;
-    __sm_expandmap_entry(map, map->buckets[i]);
-    map->buckets[i] = NULL;
+    if (map->buckets[i] != NULL) {
+      __sm_expandmap_entry(map, map->buckets[i]);
+      map->buckets[i] = NULL;
+    }
   }
 }
 
