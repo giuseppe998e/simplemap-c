@@ -79,7 +79,7 @@ float __sm_loadfactor(simplemap *map) {
  */
 size_t __sm_hashfunc(simplemap *map, char *k) {
   size_t hash = 37; // prime number
-  while(*k != '\0') hash = (hash * 54059) ^ ((*(k++)) * 76963); // 54059, 76963 are also prime numbers
+  while(*k) hash = (hash * 54059) ^ ((*(k++)) * 76963); // 54059, 76963 are also prime numbers
   return hash % map->capacity;
 }
 
