@@ -76,10 +76,11 @@ float __sm_loadfactor(simplemap *map) {
 
 /**
  * Hash function to find the bucket index
+ * (Bernstein hash DJB2)
  */
 size_t __sm_hashfunc(simplemap *map, char *k) {
-  size_t hash = 37; // prime number
-  while(*k) hash = (hash * 54059) ^ ((*(k++)) * 76963); // 54059, 76963 are also prime numbers
+  size_t hash = 5381; // prime number
+  while(*k) hash = ((hash << 5) + hash) ^ *k++; // (hash * 33) ^ *k++
   return hash % map->capacity;
 }
 
