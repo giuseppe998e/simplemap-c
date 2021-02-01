@@ -71,7 +71,7 @@ void sm_free(simplemap *map) {
  * Return the current load factor of the map
  */
 float __sm_loadfactor(simplemap *map) {
-  return map->entries / map->capacity;
+  return (float)map->entries / (float)map->capacity;
 }
 
 /**
