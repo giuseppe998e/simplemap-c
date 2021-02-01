@@ -191,7 +191,7 @@ char *sm_get(simplemap *map, char *k) {
     pos = pos->next;
   }
 
-  return NULL;
+  return "";
 }
 
 /**
