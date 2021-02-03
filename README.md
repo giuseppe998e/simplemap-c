@@ -1,5 +1,5 @@
 # SimpleMap
-This is an implementation of a `HashMap` written in **C** just for fun and with educational purposes.
+This is an implementation of a `HashMap` written in **C** just for fun and with educational purposes.  
 **It is not intended for use in a production scenario.**
 
 ### Usage example (string)
