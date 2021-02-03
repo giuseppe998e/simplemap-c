@@ -24,7 +24,7 @@ struct __sm_entry {
   struct __sm_entry *next;
 };
 
-struct __simplemap {
+struct __sm_map {
   size_t capacity; // N# buckets (initial 16) - Power of 2
   size_t entries;  // N# of ALL items
   struct __sm_entry **buckets;

@@ -26,7 +26,7 @@
 #define __SM_INITCAPACITY 16
 #define __SM_LOADFACTOR   .75F
 
-typedef struct __simplemap simplemap;
+typedef struct __sm_map simplemap;
 
 simplemap *sm_new();
 void sm_free(simplemap*);
