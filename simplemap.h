@@ -31,8 +31,8 @@ typedef struct __sm_map simplemap;
 simplemap *sm_new();
 void sm_free(simplemap*);
 
-void  sm_put(simplemap*, char*, char*);
-char *sm_get(simplemap*, char*);
+void  sm_put(simplemap*, char*, void*, size_t);
+void *sm_get(simplemap*, char*);
 void  sm_rem(simplemap*, char*);
 
 #endif

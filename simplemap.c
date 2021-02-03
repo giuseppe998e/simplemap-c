@@ -20,7 +20,7 @@
 
 struct __sm_entry {
   char *key;
-  char *value;
+  void *value;
   struct __sm_entry *next;
 };
 
@@ -48,7 +48,7 @@ void __sm_entryfree(struct __sm_entry *entry) {
   if (entry->next != NULL) {
     __sm_entryfree(entry->next);
   }
-    
+
   free(entry->key);
   free(entry->value);
   free(entry);
@@ -79,9 +79,9 @@ float __sm_loadfactor(simplemap *map) {
  * Hash function to find the bucket index
  * (Bernstein hash DJB2)
  */
-size_t __sm_hashfunc(simplemap *map, char *k) {
+size_t __sm_hashfunc(simplemap *map, char *key) {
   size_t hash = 5381; // prime number
-  while(*k) hash = ((hash << 5) + hash) ^ *k++; // (hash * 33) ^ *k++
+  while(*key) hash = ((hash << 5) + hash) ^ *key++; // (hash * 33) ^ *key++
   return hash % map->capacity;
 }
 
@@ -131,15 +131,15 @@ void __sm_expandmap(simplemap *map) {
 /**
  * Support function for sm_put
  */
-struct __sm_entry *__sm_newentry(simplemap *map, char *k, char *v) {
+struct __sm_entry *__sm_newentry(simplemap *map, char *key, void *value, size_t size) {
   struct __sm_entry *entry = (struct __sm_entry *)malloc(sizeof(struct __sm_entry));
-  
-  entry->key = (char *)malloc(sizeof(char) * (strlen(k) + 1));
-  strcpy(entry->key, k);
 
-  entry->value = (char *)malloc(sizeof(char) * (strlen(v) + 1));
-  strcpy(entry->value, v);
-  
+  entry->key = (char *)malloc(sizeof(char) * (strlen(key) + 1));
+  strcpy(entry->key, key);
+
+  entry->value = (char *)malloc(size);
+  memcpy(entry->value, value, size);
+
   entry->next = NULL;
 
   map->entries += 1;
@@ -149,25 +149,25 @@ struct __sm_entry *__sm_newentry(simplemap *map, char *k, char *v) {
 /**
  * Add (or replace) a <key, value> tuple to the map
  */
-void sm_put(simplemap *map, char *k, char *v) {
+void sm_put(simplemap *map, char *key, void *value, size_t size) {
   if (__sm_loadfactor(map) > __SM_LOADFACTOR) {
     __sm_expandmap(map);
   }
 
-  int index = __sm_hashfunc(map, k);
+  int index = __sm_hashfunc(map, key);
 
   if (map->buckets[index] == NULL) {
-    map->buckets[index] = __sm_newentry(map, k, v);
+    map->buckets[index] = __sm_newentry(map, key, value, size);
     return;
   }
 
   struct __sm_entry *prev,
                     *pos = map->buckets[index];
   while (pos != NULL) {
-    if (strcmp(pos->key, k) == 0) {
+    if (strcmp(pos->key, key) == 0) {
       free(pos->value);
-      pos->value = (char *)malloc(sizeof(char) * (strlen(v) + 1));
-      strcpy(pos->value, v);
+      pos->value = (void *)malloc(size);
+      memcpy(pos->value, value, size);
       return;
     }
 
@@ -175,42 +175,43 @@ void sm_put(simplemap *map, char *k, char *v) {
     pos = pos->next;
   }
 
-  prev->next = __sm_newentry(map, k, v);
+  prev->next = __sm_newentry(map, key, value, size);
 }
 
 /**
  * Get the value associated with the given key
  */
-char *sm_get(simplemap *map, char *k) {
-  int index = __sm_hashfunc(map, k);
+void *sm_get(simplemap *map, char *key) {
+  int index = __sm_hashfunc(map, key);
   struct __sm_entry *pos = map->buckets[index];
 
   while (pos != NULL) {
-    if (strcmp(pos->key, k) == 0) {
+    if (strcmp(pos->key, key) == 0) {
       return pos->value;
     }
 
     pos = pos->next;
   }
 
-  return "";
+  return NULL;
 }
 
 /**
  * Remove a <key, value> tuple from the map
  */
-void sm_rem(simplemap *map, char *k) {
-  int index = __sm_hashfunc(map, k);
+void sm_rem(simplemap *map, char *key) {
+  int index = __sm_hashfunc(map, key);
 
   if (map->buckets[index] == NULL) {
     return;
   }
 
-  if (strcmp(map->buckets[index]->key, k) == 0) {
+  if (strcmp(map->buckets[index]->key, key) == 0) {
     struct __sm_entry *to_del = map->buckets[index];
     map->buckets[index] = to_del->next;
     free(to_del);
-    map->entries -= 1; 
+
+    map->entries -= 1;
     return;
   }
 
@@ -218,13 +219,14 @@ void sm_rem(simplemap *map, char *k) {
                     *to_del = prev->next;
 
   while (to_del != NULL) {
-    if (strcmp(to_del->key, k) == 0) {
+    if (strcmp(to_del->key, key) == 0) {
       prev->next = to_del->next;
       free(to_del);
+
       map->entries -= 1;
       return;
     }
-    
+
     prev = to_del;
     to_del = to_del->next;
   }
