@@ -45,9 +45,8 @@ simplemap *sm_new() {
  * Support function for sm_free
  */
 void __sm_entryfree(struct __sm_entry *entry) {
-  if (entry->next != NULL) {
+  if (entry->next != NULL)
     __sm_entryfree(entry->next);
-  }
 
   free(entry->key);
   free(entry->value);
@@ -59,9 +58,8 @@ void __sm_entryfree(struct __sm_entry *entry) {
  */
 void sm_free(simplemap *map) {
   for (int i = 0; i < map->capacity; i++) {
-    if (map->buckets[i] != NULL) {
+    if (map->buckets[i] != NULL) 
       __sm_entryfree(map->buckets[i]);
-    }
   }
 
   free(map->buckets);
@@ -89,9 +87,8 @@ size_t __sm_hashfunc(simplemap *map, char *key) {
  * Support function for __sm_expandmap
  */
 void __sm_expandmap_entry(simplemap *map, struct __sm_entry *entry) {
-  if (entry->next != NULL) {
+  if (entry->next != NULL)
     __sm_expandmap_entry(map, entry->next);
-  }
 
   size_t new_i = __sm_hashfunc(map, entry->key);
 
@@ -100,6 +97,7 @@ void __sm_expandmap_entry(simplemap *map, struct __sm_entry *entry) {
   } else {
     struct __sm_entry *new_pos = map->buckets[new_i],
                       *new_prev;
+
     while (new_pos != NULL) {
       new_prev = new_pos;
       new_pos = new_pos->next;
@@ -121,10 +119,10 @@ void __sm_expandmap(simplemap *map) {
   map->buckets = (struct __sm_entry **)realloc(map->buckets, map->capacity * sizeof(struct __sm_entry *));
 
   for (int i = 0; i < old_capacity; i++) {
-    if (map->buckets[i] != NULL) {
-      __sm_expandmap_entry(map, map->buckets[i]);
-      map->buckets[i] = NULL;
-    }
+    if (map->buckets[i] == NULL) continue;
+
+    __sm_expandmap_entry(map, map->buckets[i]);
+    map->buckets[i] = NULL;
   }
 }
 
@@ -150,9 +148,8 @@ struct __sm_entry *__sm_newentry(simplemap *map, char *key, void *value, size_t 
  * Add (or replace) a <key, value> tuple to the map
  */
 void sm_put(simplemap *map, char *key, void *value, size_t size) {
-  if (__sm_loadfactor(map) > __SM_LOADFACTOR) {
+  if (__sm_loadfactor(map) > __SM_LOADFACTOR)
     __sm_expandmap(map);
-  }
 
   int index = __sm_hashfunc(map, key);
 
@@ -186,9 +183,8 @@ void *sm_get(simplemap *map, char *key) {
   struct __sm_entry *pos = map->buckets[index];
 
   while (pos != NULL) {
-    if (strcmp(pos->key, key) == 0) {
+    if (strcmp(pos->key, key) == 0)
       return pos->value;
-    }
 
     pos = pos->next;
   }
@@ -202,9 +198,8 @@ void *sm_get(simplemap *map, char *key) {
 void sm_rem(simplemap *map, char *key) {
   int index = __sm_hashfunc(map, key);
 
-  if (map->buckets[index] == NULL) {
+  if (map->buckets[index] == NULL)
     return;
-  }
 
   if (strcmp(map->buckets[index]->key, key) == 0) {
     struct __sm_entry *to_del = map->buckets[index];
