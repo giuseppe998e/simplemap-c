@@ -45,7 +45,7 @@ simplemap *sm_new() {
  * Support function for sm_free
  */
 void __sm_entryfree(struct __sm_entry *entry) {
-  if (entry->next != NULL)
+  if (entry->next)
     __sm_entryfree(entry->next);
 
   free(entry->key);
@@ -58,7 +58,7 @@ void __sm_entryfree(struct __sm_entry *entry) {
  */
 void sm_free(simplemap *map) {
   for (int i = 0; i < map->capacity; i++) {
-    if (map->buckets[i] != NULL) 
+    if (map->buckets[i]) 
       __sm_entryfree(map->buckets[i]);
   }
 
@@ -87,7 +87,7 @@ size_t __sm_hashfunc(simplemap *map, char *key) {
  * Support function for __sm_expandmap
  */
 void __sm_expandmap_entry(simplemap *map, struct __sm_entry *entry) {
-  if (entry->next != NULL)
+  if (entry->next)
     __sm_expandmap_entry(map, entry->next);
 
   size_t new_i = __sm_hashfunc(map, entry->key);
@@ -98,7 +98,7 @@ void __sm_expandmap_entry(simplemap *map, struct __sm_entry *entry) {
     struct __sm_entry *new_pos = map->buckets[new_i],
                       *new_prev;
 
-    while (new_pos != NULL) {
+    while (new_pos) {
       new_prev = new_pos;
       new_pos = new_pos->next;
     }
@@ -160,7 +160,7 @@ void sm_put(simplemap *map, char *key, void *value, size_t size) {
 
   struct __sm_entry *prev,
                     *pos = map->buckets[index];
-  while (pos != NULL) {
+  while (pos) {
     if (strcmp(pos->key, key) == 0) {
       free(pos->value);
       pos->value = (void *)malloc(size);
@@ -182,12 +182,9 @@ void *sm_get(simplemap *map, char *key) {
   int index = __sm_hashfunc(map, key);
   struct __sm_entry *pos = map->buckets[index];
 
-  while (pos != NULL) {
+  for (; pos; pos = pos->next)
     if (strcmp(pos->key, key) == 0)
       return pos->value;
-
-    pos = pos->next;
-  }
 
   return NULL;
 }
@@ -213,7 +210,7 @@ void sm_rem(simplemap *map, char *key) {
   struct __sm_entry *prev = map->buckets[index],
                     *to_del = prev->next;
 
-  while (to_del != NULL) {
+  while (to_del) {
     if (strcmp(to_del->key, key) == 0) {
       prev->next = to_del->next;
       free(to_del);
