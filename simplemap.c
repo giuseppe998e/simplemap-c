@@ -45,12 +45,14 @@ simplemap sm_new() {
  * Support function for sm_free
  */
 void __sm_entryfree(struct __sm_entry *entry) {
-  if (entry->next)
-    __sm_entryfree(entry->next);
+  while (entry) {
+    struct __sm_entry *temp = entry;
+    entry = temp->next;
 
-  free(entry->key);
-  free(entry->value);
-  free(entry);
+    free(temp->key);
+    free(temp->value);
+    free(temp);
+  }
 }
 
 /**
