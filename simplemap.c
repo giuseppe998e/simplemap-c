@@ -44,7 +44,7 @@ simplemap sm_new() {
 /**
  * Support function for sm_free
  */
-void __sm_entryfree(struct __sm_entry *entry) {
+void __sm_free_entries(struct __sm_entry *entry) {
   while (entry) {
     struct __sm_entry *temp = entry;
     entry = temp->next;
@@ -61,7 +61,7 @@ void __sm_entryfree(struct __sm_entry *entry) {
 void sm_free(simplemap map) {
   for (int i = 0; i < map->capacity; i++) {
     if (map->buckets[i]) 
-      __sm_entryfree(map->buckets[i]);
+      __sm_free_entries(map->buckets[i]);
   }
 
   free(map->buckets);
