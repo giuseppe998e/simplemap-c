@@ -8,7 +8,7 @@ This is an implementation of a `HashMap` written in **C** just for fun and with 
 #include "simplemap.h"
 
 void main(int argc, char *argv) {
-  simplemap *sm = sm_new();
+  simplemap sm = sm_new();
 
   sm_put(sm, "3x12xx", "HELLO", sizeof(char) * 5 /* strlen + 1 */);
 
@@ -39,7 +39,7 @@ void main(int argc, char *argv) {
   struct test {int x; char* y;};
   
   struct test xx = {1998, "HELLO WORLD!"};
-  simplemap *sm = sm_new();
+  simplemap sm = sm_new();
 
   sm_put(sm, "test", &xx, sizeof(struct test));
 
