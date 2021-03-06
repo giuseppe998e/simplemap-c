@@ -19,8 +19,8 @@
 #ifndef __SIMPLEMAP_H
 #define __SIMPLEMAP_H
 
-#define __SM_INITCAPACITY 16
-#define __SM_LOADFACTOR   .75F
+#define SM_INITCAPACITY 16
+#define SM_LOADFACTOR   .75F
 
 typedef struct __sm_map *simplemap;
 

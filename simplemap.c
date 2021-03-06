@@ -38,8 +38,8 @@ struct __sm_map {
  */
 simplemap sm_new() {
   simplemap map = malloc(sizeof(struct __sm_map));
-  map->capacity = __SM_INITCAPACITY;
-  map->buckets = (struct __sm_entry **)malloc(__SM_INITCAPACITY * sizeof(struct __sm_entry *));
+  map->capacity = SM_INITCAPACITY;
+  map->buckets = (struct __sm_entry **)malloc(SM_INITCAPACITY * sizeof(struct __sm_entry *));
 
   return map;
 }
@@ -153,7 +153,7 @@ struct __sm_entry *__sm_newentry(simplemap map, char *key, void *value, size_t s
  * Add (or replace) a <key, value> tuple to the map
  */
 void sm_put(simplemap map, char *key, void *value, size_t size) {
-  if (__sm_loadfactor(map) > __SM_LOADFACTOR)
+  if (__sm_loadfactor(map) > SM_LOADFACTOR)
     __sm_expandmap(map);
 
   int index = __sm_hashfunc(map, key);
