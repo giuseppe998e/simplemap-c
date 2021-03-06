@@ -34,7 +34,7 @@ struct __sm_map {
  * Create a new map
  */
 simplemap sm_new() {
-  simplemap map = malloc(sizeof(simplemap));
+  simplemap map = malloc(sizeof(struct __sm_map));
   map->capacity = __SM_INITCAPACITY;
   map->buckets = (struct __sm_entry **)malloc(__SM_INITCAPACITY * sizeof(struct __sm_entry *));
 
