@@ -19,10 +19,6 @@
 #ifndef __SIMPLEMAP_H
 #define __SIMPLEMAP_H
 
-#include <stdlib.h>
-#include <stddef.h>
-#include <string.h>
-
 #define __SM_INITCAPACITY 16
 #define __SM_LOADFACTOR   .75F
 

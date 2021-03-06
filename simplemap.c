@@ -16,6 +16,9 @@
  * this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
+#include <string.h>
+
 #include "simplemap.h"
 
 struct __sm_entry {
