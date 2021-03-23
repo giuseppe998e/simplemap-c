@@ -33,7 +33,7 @@ void main(int argc, char *argv) {
 ### Usage example (struct)
 ```c
 #include <stdio.h>
-#include "hashmao.h"
+#include "hashmap.h"
 
 void main(int argc, char *argv) {
   struct test {int x; char* y;};
