@@ -1,5 +1,5 @@
 /**
- * SimpleMap - A "just for fun" implementation of a C HashMap
+ * HashMap-C - A "just for fun" implementation of a HashMap in C
  * Copyright (C) 2021 - Giuseppe Eletto <peppe.eletto@gmail.com>
  *
  * This library is free software: you can redistribute it and/or
