@@ -16,21 +16,42 @@
  * this library. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef __SIMPLEMAP_H
-#define __SIMPLEMAP_H
+#ifndef __HASHMAP_H
+#define __HASHMAP_H
 
 #include <stddef.h>
 
-#define SM_INITCAPACITY 16
-#define SM_LOADFACTOR   .75F
+#define HM_INITCAPACITY 16
+#define HM_LOADFACTOR   .75F
 
-typedef struct __sm_map *simplemap;
+/**
+ * 
+ */
+typedef struct __hashmap *hashmap;
 
-simplemap sm_new();
-void sm_free(simplemap);
+/**
+ * 
+ */
+hashmap hm_new(void(*)(void*));
 
-void  sm_put(simplemap, char*, void*, size_t);
-void *sm_get(simplemap, char*);
-void  sm_rem(simplemap, char*);
+/**
+ * 
+ */
+void hm_put(hashmap, char*, void*, size_t);
+
+/**
+ * 
+ */
+void *hm_get(hashmap, char*);
+
+/**
+ * 
+ */
+void hm_rem(hashmap, char*);
+
+/**
+ * 
+ */
+void hm_free(hashmap);
 
 #endif
