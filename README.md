@@ -1,4 +1,4 @@
-# HashMap-C
+# HashMap-C [![Version](https://img.shields.io/github/v/tag/giuseppe998e/hashmap-c?style=flat-square)](https://github.com/giuseppe998e/hashmap-c/tags)
 This is an implementation of a `HashMap` written in **C** just for fun and with educational purposes.  
 **It is not intended for use in a production scenario.**
 
